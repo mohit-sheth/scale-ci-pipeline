@@ -19,7 +19,7 @@
         echo "Fetching the  kubeconfig from the orchestration host"
         scp ${OPTIONS} -i ${PRIVATE_KEY} ${ORCHESTRATION_USER}@${ORCHESTRATION_HOST}:$HOME/.kube/config ${WORKSPACE}/kubeconfig
         export KUBECONFIG=${WORKSPACE}/kubeconfig
-
+         ￼
         # Create inventory File:
         echo "[orchestration]" > inventory
         echo "${ORCHESTRATION_HOST}" >> inventory
