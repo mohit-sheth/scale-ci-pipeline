@@ -1,15 +1,16 @@
 #!/usr/bin/env groovy
+class Tools {
+def function(def param){
+	println "'${param}'"
+	def pipeline_id = env.BUILD_ID
+	def node_label = NODE_LABEL.toString()
+	def http = HTTP_TEST.toString().toUpperCase()
+	def property_file_name = "http.properties"
 
-def pipeline_id = env.BUILD_ID
-def node_label = NODE_LABEL.toString()
-def http = HTTP_TEST.toString().toUpperCase()
-def property_file_name = "http.properties"
+	println "Current pipeline job build id is '${pipeline_id}'"
 
-println "Current pipeline job build id is '${pipeline_id}'"
-
-// run http scale test
-stage ('http_scale_test') {
-	if (http == "TRUE") {
+	// run http scale test
+	stage ('http_scale_test') {
 		currentBuild.result = "SUCCESS"
 		node(node_label) {
 			// get properties file
@@ -99,9 +100,10 @@ stage ('http_scale_test') {
 						Jenkins job: ${env.BUILD_URL}
 				""")
 				currentBuild.result = "FAILURE"
- 				sh "exit 1"
+				sh "exit 1"
 			}
 			println "ATS-SCALE-CI-HTTP build ${http_build.getNumber()} completed successfully"
 		}
 	}
+}
 }

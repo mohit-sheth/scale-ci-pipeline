@@ -2,6 +2,7 @@
 
 def contact = "nelluri@redhat.com"
 def watcher = SCALE_CI_WATCHER.toString().toUpperCase()
+def aws = AWS.toString().toUpperCase()
 def build_tracker = SCALE_CI_BUILD_TRACKER.toString().toUpperCase()
 def tooling = TOOLING.toString().toUpperCase()
 def run_conformance = CONFORMANCE.toString().toUpperCase()
@@ -38,6 +39,12 @@ node (node_label) {
 	if (watcher == "TRUE") {
 		load "pipeline-scripts/scale_ci_watcher.groovy"
 	}
+
+
+        // creates/updates jenkins jobs using the jjb templates
+        if (aws == "TRUE") {
+                load "pipeline-scripts/aws.groovy"
+        }
 
 	// Queries UMB message to capture the OCP 4.x payloads
 	if ( build_tracker == "TRUE") {
