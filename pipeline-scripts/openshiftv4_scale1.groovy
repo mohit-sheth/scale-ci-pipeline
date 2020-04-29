@@ -36,7 +36,7 @@ stage ('4.x scale cluster') {
 		def job_completion_poll_attempts = scale_properties['JOB_COMPLETION_POLL_ATTEMPTS']
 		def scale_test_prefix = scale_properties['SCALE_TEST_PREFIX']
 		def scale_metadata_prefix = scale_properties['SCALE_METADATA_PREFIX']
-		def scale_worker_count = scale_properties['SCALE_WORKER_COUNT']
+		def scale_worker_count = scale_properties['SCALE_WORKER_COUNT_V2']
 		def scale_poll_attempts = scale_properties['SCALE_POLL_ATTEMPTS']
 		def expected_scale_duration = scale_properties['EXPECTED_SCALE_DURATION']
 

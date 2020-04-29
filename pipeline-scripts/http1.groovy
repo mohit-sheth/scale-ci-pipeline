@@ -37,7 +37,7 @@ stage ('http_scale_test') {
 		def http_test_load_generators = http_properties['HTTP_TEST_LOAD_GENERATORS']
 		def http_test_load_generator_nodes = http_properties['HTTP_TEST_LOAD_GENERATOR_NODES']
 		def http_test_app_projects = http_properties['HTTP_TEST_APP_PROJECTS']
-		def http_test_app_templates = http_properties['HTTP_TEST_APP_TEMPLATES']
+		def http_test_app_templates = http_properties['HTTP_TEST_APP_TEMPLATES_LARGE']
 		def http_test_runtime = http_properties['HTTP_TEST_RUNTIME']
 		def http_test_mb_ramp_up = http_properties['HTTP_TEST_MB_RAMP_UP']
 		def http_test_mb_delay = http_properties['HTTP_TEST_MB_DELAY']
