@@ -56,7 +56,6 @@
       This job is managed by https://github.com/openshift-scale/scale-ci-pipeline
     disabled: false
     name: ATS-SCALE-CI-NAMESPACES-PER-CLUSTER
-    node: scale-ci
     parameters:
     - string:
         default: ''

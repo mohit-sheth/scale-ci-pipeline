@@ -27,7 +27,6 @@
       This job is managed by https://github.com/openshift-scale/scale-ci-pipeline
     disabled: false
     name: ATS-SCALE-CI-OCP-GCP-DEPLOY
-    node: scale-ci
     parameters:
     - string:
         default: "root"

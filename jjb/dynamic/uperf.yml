@@ -50,7 +50,6 @@
       <!-- Managed by Jenkins Job Builder -->
     disabled: false
     name: RIPSAW-UPERF
-    node: scale-ci
     parameters:
     - string:
         default: root

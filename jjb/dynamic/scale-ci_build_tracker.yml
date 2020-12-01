@@ -29,7 +29,6 @@
       -->
     disabled: false
     name: SCALE-CI-BUILD-TRACKER
-    node: scale-ci
     parameters:
     - string:
         default: ''

@@ -61,7 +61,6 @@
       -->
     disabled: false
     name: ATS-BASELINE-SCALE-TEST
-    node: scale-ci
     parameters:
     - string:
         default: ""

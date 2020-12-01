@@ -32,7 +32,6 @@
       This job is managed by https://github.com/openshift-scale/scale-ci-pipeline
     disabled: false
     name: ATS-SCALE-CI-TOOLING
-    node: scale-ci
     parameters:
     - string:
         default: ""

@@ -27,7 +27,6 @@
       Job Builder --><!-- Managed by Jenkins Job Builder -->
     disabled: false
     name: INDEXER
-    node: scale-ci
     parameters:
     - string:
         default: ''

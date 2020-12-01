@@ -21,7 +21,6 @@
     description: This job runs Kraken workload
     disabled: false
     name: kraken
-    node: scale-ci
     parameters:
     - string:
         default: ""
