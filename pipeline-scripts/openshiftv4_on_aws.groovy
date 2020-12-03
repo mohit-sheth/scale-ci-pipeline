@@ -3,7 +3,8 @@
 def pipeline_id = env.BUILD_ID
 def node_label = NODE_LABEL.toString()
 def ocp_install = OPENSHIFTv4_INSTALL_ON_AWS.toString().toUpperCase()
-def property_file_name = "ocp_install.properties"
+def property_file_name_global = "ocp_install.properties_global"
+def property_file_name_local = "ocp_install.properties_local"
 
 println "Current pipeline job build id is '${pipeline_id}'"
 
@@ -13,14 +14,14 @@ stage ('OCP 4.X INSTALL') {
 		currentBuild.result = "SUCCESS"
 		node(node_label) {
 			// get properties file
-			if (fileExists(property_file_name)) {
+			if (fileExists(property_file_name_global)) {
 				println "Looks like the property file already exists, erasing it"
-				sh "rm ${property_file_name}"
+				sh "rm ${property_file_name_global}"
+				sh "rm ${property_file_name_local}"
 			}
-			// get properties file
-			sh "wget ${OPENSHIFTv4_ON_AWS_PROPERTY_FILE} -O ${property_file_name}"
-			def openshiftv4_properties = readProperties file: property_file_name
-			def orchestration_host = openshiftv4_properties['ORCHESTRATION_HOST']
+			// get global properties file
+			sh "wget ${OPENSHIFTv4_ON_AWS_PROPERTY_FILE_GLOBAL} -O ${property_file_name_global}"
+			def openshiftv4_properties = readProperties file: property_file_name_global
 			def orchestration_user = openshiftv4_properties['ORCHESTRATION_USER']
 			def sshkey_token = openshiftv4_properties['SSHKEY_TOKEN']
 			def openshift_cleanup = openshiftv4_properties['OPENSHIFT_CLEANUP']
@@ -30,7 +31,6 @@ stage ('OCP 4.X INSTALL') {
 			def openshift_debug_config = openshiftv4_properties['OPENSHIFT_DEBUG_CONFIG']
 			def openshift_oc_client_url = openshiftv4_properties['OPENSHIFT_CLIENT_LOCATION']
 			def scale_ci_build_trigger = openshiftv4_properties['SCALE_CI_BUILD_TRIGGER']
-			def scale_ci_build_trigger_url = openshiftv4_properties['SCALE_CI_BUILD_TRIGGER_URL']
 			def enable_dittybopper = openshiftv4_properties['ENABLE_DITTYBOPPER']
 			def cerberus_enable = openshiftv4_properties['CERBERUS_ENABLE']
 			def kubeconfig_path = openshiftv4_properties['KUBECONFIG_PATH']
@@ -67,39 +67,24 @@ stage ('OCP 4.X INSTALL') {
 			def aws_access_key_id = openshiftv4_properties['AWS_ACCESS_KEY_ID']
 			def aws_secret_access_key = openshiftv4_properties['AWS_SECRET_ACCESS_KEY']
 			def aws_region = openshiftv4_properties['AWS_REGION']
-			def openshift_base_domain = openshiftv4_properties['OPENSHIFT_BASE_DOMAIN']
-			def openshift_cluster_name = openshiftv4_properties['OPENSHIFT_CLUSTER_NAME']
 			def openshift_master_count = openshiftv4_properties['OPENSHIFT_MASTER_COUNT']
 			def openshift_worker_count = openshiftv4_properties['OPENSHIFT_WORKER_COUNT']
-			def openshift_master_instance_type = openshiftv4_properties['OPENSHIFT_MASTER_INSTANCE_TYPE']
-			def openshift_worker_instance_type = openshiftv4_properties['OPENSHIFT_WORKER_INSTANCE_TYPE']
 			def openshift_master_root_volume_size = openshiftv4_properties['OPENSHIFT_MASTER_ROOT_VOLUME_SIZE']
-			def openshift_master_root_volume_type = openshiftv4_properties['OPENSHIFT_MASTER_ROOT_VOLUME_TYPE']
 			def openshift_master_root_volume_iops = openshiftv4_properties['OPENSHIFT_MASTER_ROOT_VOLUME_IOPS']
 			def openshift_worker_root_volume_size = openshiftv4_properties['OPENSHIFT_WORKER_ROOT_VOLUME_SIZE']
-			def openshift_worker_root_volume_type = openshiftv4_properties['OPENSHIFT_WORKER_ROOT_VOLUME_TYPE']
 			def openshift_worker_root_volume_iops = openshiftv4_properties['OPENSHIFT_WORKER_ROOT_VOLUME_IOPS']
-			def openshift_cidr = openshiftv4_properties['OPENSHIFT_CIDR']
 			def openshift_machine_cidr = openshiftv4_properties['OPENSHIFT_MACHINE_CIDR']
-			def openshift_network_type = openshiftv4_properties['OPENSHIFT_NETWORK_TYPE']
 			def openshift_service_network = openshiftv4_properties['OPENSHIFT_SERVICE_NETWORK']
-			def openshift_host_prefix = openshiftv4_properties['OPENSHIFT_HOST_PREFIX']
 			def openshift_post_install_poll_attempts = openshiftv4_properties['OPENSHIFT_POST_INSTALL_POLL_ATTEMPTS']
 			def openshift_toggle_infra_node = openshiftv4_properties['OPENSHIFT_TOGGLE_INFRA_NODE']
 			def openshift_toggle_workload_node = openshiftv4_properties['OPENSHIFT_TOGGLE_WORKLOAD_NODE']
 			def machineset_metadata_label_prefix = openshiftv4_properties['MACHINESET_METADATA_LABEL_PREFIX']
-			def openshift_infra_node_instance_type = openshiftv4_properties['OPENSHIFT_INFRA_NODE_INSTANCE_TYPE']
-			def openshift_workload_node_instance_type = openshiftv4_properties['OPENSHIFT_WORKLOAD_NODE_INSTANCE_TYPE']
 			def openshift_infra_node_volume_size = openshiftv4_properties['OPENSHIFT_INFRA_NODE_VOLUME_SIZE']
-			def openshift_infra_node_volume_type = openshiftv4_properties['OPENSHIFT_INFRA_NODE_VOLUME_TYPE']
 			def openshift_infra_node_volume_iops = openshiftv4_properties['OPENSHIFT_INFRA_NODE_VOLUME_IOPS']
 			def openshift_workload_node_volume_size = openshiftv4_properties['OPENSHIFT_WORKLOAD_NODE_VOLUME_SIZE']
-			def openshift_workload_node_volume_type = openshiftv4_properties['OPENSHIFT_WORKLOAD_NODE_VOLUME_TYPE']
 			def openshift_workload_node_volume_iops = openshiftv4_properties['OPENSHIFT_WORKLOAD_NODE_VOLUME_IOPS']
 			def openshift_prometheus_retention_period = openshiftv4_properties['OPENSHIFT_PROMETHEUS_RETENTION_PERIOD']
-			def openshift_prometheus_storage_class = openshiftv4_properties['OPENSHIFT_PROMETHEUS_STORAGE_CLASS']
 			def openshift_prometheus_storage_size = openshiftv4_properties['OPENSHIFT_PROMETHEUS_STORAGE_SIZE']
-			def openshift_alertmanager_storage_class = openshiftv4_properties['OPENSHIFT_ALERTMANAGER_STORAGE_CLASS']
 			def openshift_alertmanager_storage_size = openshiftv4_properties['OPENSHIFT_ALERTMANAGER_STORAGE_SIZE']
 			def kubeconfig_auth_dir_path = openshiftv4_properties['KUBECONFIG_AUTH_DIR_PATH']
 			def fips = openshiftv4_properties['FIPS']
@@ -110,6 +95,27 @@ stage ('OCP 4.X INSTALL') {
 			def jenkins_user = openshiftv4_properties['JENKINS_USER']
 			def jenkins_api_token = openshiftv4_properties['JENKINS_API_TOKEN']
 			def jenkins_es_server = openshiftv4_properties['JENKINS_ES_SERVER']
+                        // get local properties file
+                        sh "wget ${OPENSHIFTv4_ON_AWS_PROPERTY_FILE_LOCAL} -O ${property_file_name_local}"
+                        def openshiftv4_properties1 = readProperties file: property_file_name_local
+                        def orchestration_host = openshiftv4_properties1['ORCHESTRATION_HOST']
+                        def scale_ci_build_trigger_url = openshiftv4_properties1['SCALE_CI_BUILD_TRIGGER_URL']
+                        def openshift_base_domain = openshiftv4_properties1['OPENSHIFT_BASE_DOMAIN']
+                        def openshift_cluster_name = openshiftv4_properties1['OPENSHIFT_CLUSTER_NAME']
+                        def openshift_master_instance_type = openshiftv4_properties1['OPENSHIFT_MASTER_INSTANCE_TYPE']
+                        def openshift_worker_instance_type = openshiftv4_properties1['OPENSHIFT_WORKER_INSTANCE_TYPE']
+                        def openshift_master_root_volume_type = openshiftv4_properties1['OPENSHIFT_MASTER_ROOT_VOLUME_TYPE']
+                        def openshift_worker_root_volume_type = openshiftv4_properties1['OPENSHIFT_WORKER_ROOT_VOLUME_TYPE']
+                        def openshift_cidr = openshiftv4_properties1['OPENSHIFT_CIDR']
+                        def openshift_network_type = openshiftv4_properties1['OPENSHIFT_NETWORK_TYPE']
+                        def openshift_host_prefix = openshiftv4_properties1['OPENSHIFT_HOST_PREFIX']
+                        def openshift_infra_node_instance_type = openshiftv4_properties1['OPENSHIFT_INFRA_NODE_INSTANCE_TYPE']
+                        def openshift_workload_node_instance_type = openshiftv4_properties1['OPENSHIFT_WORKLOAD_NODE_INSTANCE_TYPE']
+                        def openshift_infra_node_volume_type = openshiftv4_properties1['OPENSHIFT_INFRA_NODE_VOLUME_TYPE']
+                        def openshift_workload_node_volume_type = openshiftv4_properties1['OPENSHIFT_WORKLOAD_NODE_VOLUME_TYPE']
+                        def openshift_prometheus_storage_class = openshiftv4_properties1['OPENSHIFT_PROMETHEUS_STORAGE_CLASS']
+                        def openshift_alertmanager_storage_class = openshiftv4_properties1['OPENSHIFT_ALERTMANAGER_STORAGE_CLASS']
+
 
 			// Install cluster using the payload captured at the build trigger url when scale_ci_build_trigget is set
 			if ( scale_ci_build_trigger.toBoolean() ) {
