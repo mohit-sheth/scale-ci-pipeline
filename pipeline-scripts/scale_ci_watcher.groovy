@@ -47,8 +47,8 @@ stage ('SCALE-CI-WATCHER') {
                                                 [$class: 'StringParameterValue', name: 'ADD_PUBLIC_KEY', value: add_public_key ],
                                                 [$class: 'StringParameterValue', name: 'PUBLIC_KEY', value: public_key ],
                                                 [$class: 'StringParameterValue', name: 'KEYS_PATH', value: keys_path ],
-                                                [$class: 'hudson.model.PasswordParameterValue', name: 'JENKINS_USER', value: jenkins_user ],
-                                                [$class: 'hudson.model.PasswordParameterValue', name: 'JENKINS_PASSWORD', value: jenkins_password ]]
+                                                [$class: 'hudson.model.PasswordParameterValue', name: 'JENKINS_USER', Secret.valueOf: jenkins_user ],
+                                                [$class: 'hudson.model.PasswordParameterValue', name: 'JENKINS_PASSWORD', Secret.valueOf: jenkins_password ]]
 				println("${job_name} build ${jobs_build.getNumber()} completed successfully!")
 			} catch ( Exception e) {
 				echo "{job_name} Job failed with the following error: "
