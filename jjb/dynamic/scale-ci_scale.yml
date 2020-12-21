@@ -20,14 +20,16 @@
 
         # run tests
         pushd workloads/scale-perf/
-        ./run_scale_fromgit.sh
+        echo ${SCALE}
+        echo ${SCALE_V2}
+        #./run_scale_fromgit.sh
 
     concurrent: true
     description: |
       This job gets the  OpenShift cluster to the desired node count.
       This job is managed by https://github.com/openshift-scale/scale-ci-pipeline
     disabled: false
-    name: ATS-SCALE-CI-SCALE
+    name: ATS-SCALE-CI-TEST
     node: scale-ci
     parameters:
     - string:
@@ -50,6 +52,26 @@
         default: ""
         description: The target scale of the workers in the cluster. THIS IS A REQUIRED VARIABLE
         name: SCALE
+    - string:
+        default: ""
+        description: The target scale of the workers in the cluster. THIS IS A REQUIRED VARIABLE
+        name: SCALE_V2
+    - string:
+        default: ""
+        description: The target scale of the workers in the cluster. THIS IS A REQUIRED VARIABLE
+        name: SCALE_V3
+    - string:
+        default: ""
+        description: The target scale of the workers in the cluster. THIS IS A REQUIRED VARIABLE
+        name: SCALE_V4
+    - string:
+        default: ""
+        description: The target scale of the workers in the cluster. THIS IS A REQUIRED VARIABLE
+        name: SCALE_V5
+    - string:
+        default: ""
+        description: The target scale of the workers in the cluster. THIS IS A REQUIRED VARIABLE
+        name: SCALE_V6
     - string:
         default: "5"
         description: How long (in seconds) to have the scale test wait inbetween ready checks
