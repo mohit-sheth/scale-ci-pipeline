@@ -53,7 +53,7 @@ stage ('cluster-density') {
 			def cleanup_when_finish = cluster_density_properties['CLEANUP_WHEN_FINISH']
 			def log_level = cluster_density_properties['LOG_LEVEL']
 			def cerberus_url = cluster_density_properties['CERBERUS_URL']
-
+			println "debug debug"
 			try {
 				cluster_density = build job: 'RIPSAW-CLUSTER-DENSITY',
 				parameters: [
