@@ -24,7 +24,7 @@ stage (workload) {
 	sh "wget ${workload_properties_file} -O ${property_file_name}"
 	sh "cat ${property_file_name}"
 	// Load the properties file.
-	def properties = readProperties file: property_file_name
+	def properties = readJSON file: property_file_name
 	def job_parameters = []
 	job_parameters.add([$class: 'LabelParameterValue', name: 'node', label: node_label ])
 	// Convert properties to parameters.
