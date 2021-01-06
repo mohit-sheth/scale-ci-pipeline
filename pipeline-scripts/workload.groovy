@@ -5,6 +5,7 @@ def node_label = NODE_LABEL.toString()
 def property_file_name = "workload.properties"
 def contact = "msheth@redhat.com, nelluri@redhat.com"
 def workload = env.WORKLOAD
+def global_properties_file = env.GLOBAL_PROPERTIES_FILE
 def workload_properties_file = env.WORKLOAD_PROPERTIES_FILE
 def pipeline_stage = env.PIPELINE_STAGE
 def pipeline = env.PIPELINE.toString().toUpperCase()
@@ -15,23 +16,31 @@ println "Current pipeline job build id is '${pipeline_id}'"
 stage (workload) {
 	currentBuild.result = "SUCCESS"
 	node(node_label) {
-	// get properties file
 	if (fileExists(property_file_name)) {
 		println "Looks like the property file already exists, erasing it"
 		sh "rm ${property_file_name}"
 	}
-	// get properties file
-	sh "wget ${workload_properties_file} -O ${property_file_name}"
-	sh "cat ${property_file_name}"
-	// Load the properties file.
+	// get global properties file
+	sh "wget ${global_properties_file} -O ${property_file_name}"
+	sh "cat ${property_file_name"
+	// Load the global properties file.
 	def properties = readProperties file: property_file_name
 	def job_parameters = []
 	job_parameters.add([$class: 'LabelParameterValue', name: 'node', label: node_label ])
-	// Convert properties to parameters.
+	// Convert global properties to parameters.
 	for (property in properties) {
 		job_parameters.add([$class: 'StringParameterValue', name: property.key, value: property.value ])
 	}
-        
+	// get local properties file
+	sh "wget ${workload_properties_file} -O ${property_file_name}"
+	sh "cat ${property_file_name}"
+	// Load the local properties file.
+	def properties = readProperties file: property_file_name
+	// Convert local properties to parameters.
+	for (property in properties) {
+	job_parameters.add([$class: 'StringParameterValue', name: property.key, value: property.value ])
+	}
+
 	if (pipeline == "TRUE") {
 		if (workload == "ATS-SCALE-CI-SCALE") {
 			if (pipeline_stage != "1") {

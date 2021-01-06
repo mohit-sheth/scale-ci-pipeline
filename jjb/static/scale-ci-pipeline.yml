@@ -135,6 +135,10 @@
     - string:
         default: ''
         description: ''
+        name: GLOBAL_PROPERTIES_FILE
+    - string:
+        default: ''
+        description: ''
         name: SCALE_CI_WATCHER_PROPERTY_FILE
     - string:
         default: ''

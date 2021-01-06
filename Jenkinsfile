@@ -38,6 +38,7 @@ def node_label = NODE_LABEL.toString()
 def run_id = "${env.JOB_NAME}-${env.BUILD_NUMBER}"
 
 node (node_label) {
+	env.GLOBAL_PROPERTIES_FILE=GLOBAL_PROPERTIES_FILE
 	env.RUN_ID = "${env.JOB_NAME}-${env.BUILD_NUMBER}"
 	println "Run ID is ${env.RUN_ID}"
 	// setup the repo containing the pipeline scripts
